@@ -1,0 +1,729 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_marketplace", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "AccessControlBadConfirmation", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "account", "type": "address" },
+      { "internalType": "bytes32", "name": "neededRole", "type": "bytes32" }
+    ],
+    "name": "AccessControlUnauthorizedAccount",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "collectionAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "assetPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "platformPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "shipmentFees",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tax",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "AssetData",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "collectionAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "CancelDispute",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timeStamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "disputeMessageByUser",
+        "type": "string"
+      }
+    ],
+    "name": "ClaimDispute",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "collectionAddress",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "transferAssetOwnership",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountToUser",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountToSeller",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "decisionRemarksByPlatform",
+        "type": "string"
+      }
+    ],
+    "name": "MakeDecision",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "tokenAddresses",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "tokenAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      }
+    ],
+    "name": "WithdrawFunds",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "ADMIN_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ESCROW_MANAGER_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MARKETPLACE_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GalileoEscrow.AddressType",
+        "name": "_addressType",
+        "type": "uint8"
+      },
+      { "internalType": "address", "name": "_recipient", "type": "address" }
+    ],
+    "name": "_calculateFunds",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "address", "name": "_subAdmin", "type": "address" },
+      { "internalType": "address", "name": "_owner", "type": "address" },
+      { "internalType": "address", "name": "_buyer", "type": "address" },
+      { "internalType": "address", "name": "_token", "type": "address" },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "_assetPrice", "type": "uint256" },
+      { "internalType": "uint256", "name": "_shipmentFees", "type": "uint256" },
+      { "internalType": "uint256", "name": "_tax", "type": "uint256" },
+      { "internalType": "uint256", "name": "_platformFee", "type": "uint256" },
+      { "internalType": "bool", "name": "_isSold", "type": "bool" },
+      { "internalType": "bool", "name": "_isRedeem", "type": "bool" }
+    ],
+    "name": "addAssetData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "assetsInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "assetPrice", "type": "uint256" },
+      { "internalType": "uint256", "name": "platformFee", "type": "uint256" },
+      { "internalType": "uint256", "name": "shipmentFees", "type": "uint256" },
+      { "internalType": "uint256", "name": "tax", "type": "uint256" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address", "name": "buyer", "type": "address" },
+      { "internalType": "address", "name": "subAdmin", "type": "address" },
+      { "internalType": "bool", "name": "isSold", "type": "bool" },
+      { "internalType": "bool", "name": "isRedeem", "type": "bool" },
+      { "internalType": "bool", "name": "isLocked", "type": "bool" },
+      { "internalType": "bool", "name": "isCanceled", "type": "bool" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "lockTime", "type": "uint256" },
+          {
+            "internalType": "string",
+            "name": "disputeMessageByUser",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "decisionRemarksByPlatform",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "isAssetPriceWithdrawn",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isPlatformFeeWithdrawn",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "isShipmentWithdrawn",
+            "type": "bool"
+          },
+          { "internalType": "bool", "name": "isTaxWithdrawn", "type": "bool" }
+        ],
+        "internalType": "struct GalileoEscrow.Escrow",
+        "name": "escrow",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_roles", "type": "bytes32" },
+      { "internalType": "address", "name": "_subAdmin", "type": "address" }
+    ],
+    "name": "blockSubAdminMarketplace",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" }
+    ],
+    "name": "cancelDispute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "collectionsInfo",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_escrowTime", "type": "uint256" }
+    ],
+    "name": "configureCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" }
+    ],
+    "name": "getAssetData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "assetPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "platformFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "shipmentFees",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "tax", "type": "uint256" },
+          { "internalType": "uint256", "name": "time", "type": "uint256" },
+          { "internalType": "address", "name": "token", "type": "address" },
+          { "internalType": "address", "name": "owner", "type": "address" },
+          { "internalType": "address", "name": "buyer", "type": "address" },
+          { "internalType": "address", "name": "subAdmin", "type": "address" },
+          { "internalType": "bool", "name": "isSold", "type": "bool" },
+          { "internalType": "bool", "name": "isRedeem", "type": "bool" },
+          { "internalType": "bool", "name": "isLocked", "type": "bool" },
+          { "internalType": "bool", "name": "isCanceled", "type": "bool" },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "lockTime",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "disputeMessageByUser",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "decisionRemarksByPlatform",
+                "type": "string"
+              },
+              {
+                "internalType": "bool",
+                "name": "isAssetPriceWithdrawn",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isPlatformFeeWithdrawn",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isShipmentWithdrawn",
+                "type": "bool"
+              },
+              {
+                "internalType": "bool",
+                "name": "isTaxWithdrawn",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct GalileoEscrow.Escrow",
+            "name": "escrow",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct GalileoEscrow.AssetInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getCollectionInfo",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" }
+    ],
+    "name": "getRoleAdmin",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_fundsCollector",
+        "type": "address"
+      }
+    ],
+    "name": "getTokenIds",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "collectionAddresses",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "tokenIds",
+            "type": "uint256[]"
+          }
+        ],
+        "internalType": "struct GalileoEscrow.AssetsPerCollection[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "hasRole",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_transferAssetOwnership",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "_amountToUser", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_amountToSeller",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "_tax", "type": "uint256" },
+      { "internalType": "uint256", "name": "_shipmentFees", "type": "uint256" },
+      { "internalType": "uint256", "name": "_relistPrice", "type": "uint256" },
+      {
+        "internalType": "string",
+        "name": "_decisionRemarksByPlatform",
+        "type": "string"
+      }
+    ],
+    "name": "makeDecision",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "marketplace",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "platformAddress",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      {
+        "internalType": "address",
+        "name": "callerConfirmation",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      {
+        "internalType": "string",
+        "name": "_disputeMessageByUser",
+        "type": "string"
+      }
+    ],
+    "name": "submitDispute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
+    ],
+    "name": "supportsInterface",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collectionAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" }
+    ],
+    "name": "updateRedeemAssetData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GalileoEscrow.AddressType",
+        "name": "_addressType",
+        "type": "uint8"
+      }
+    ],
+    "name": "withdrawFunds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GalileoEscrow.AddressType",
+        "name": "_addressType",
+        "type": "uint8"
+      },
+      { "internalType": "address", "name": "_recipient", "type": "address" }
+    ],
+    "name": "withdrawFundsByAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

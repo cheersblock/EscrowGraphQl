@@ -1,0 +1,47 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: GalileoEscrow
+    network: mumbai
+    source:
+      address: "0x224f383d2Ce5eb9F1805d5705e7d14f920Ac580a"
+      abi: GalileoEscrow
+      startBlock: 47067498
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AssetData
+        - CancelDispute
+        - ClaimDispute
+        - MakeDecision
+        - RoleAdminChanged
+        - RoleGranted
+        - RoleRevoked
+        - WithdrawFunds
+      abis:
+        - name: GalileoEscrow
+          file: ./abis/GalileoEscrow.json
+      eventHandlers:
+        - event: AssetData(indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleAssetData
+        - event: CancelDispute(address,uint256)
+          handler: handleCancelDispute
+        - event: ClaimDispute(uint256,uint256,string)
+          handler: handleClaimDispute
+        - event: MakeDecision(indexed address,indexed address,uint256,uint256,uint256,indexed string)
+          handler: handleMakeDecision
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: WithdrawFunds(address[],uint256[],indexed address)
+          handler: handleWithdrawFunds
+      file: ./src/galileo-escrow.ts

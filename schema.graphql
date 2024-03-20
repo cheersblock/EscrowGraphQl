@@ -1,0 +1,85 @@
+type AssetData @entity(immutable: true) {
+  id: Bytes!
+  collectionAddress: Bytes! # address
+  tokenId: BigInt! # uint256
+  assetPrice: BigInt! # uint256
+  platformPrice: BigInt! # uint256
+  shipmentFees: BigInt! # uint256
+  tax: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CancelDispute @entity(immutable: true) {
+  id: Bytes!
+  collectionAddress: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ClaimDispute @entity(immutable: true) {
+  id: Bytes!
+  price: BigInt! # uint256
+  timeStamp: BigInt! # uint256
+  disputeMessageByUser: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MakeDecision @entity(immutable: true) {
+  id: Bytes!
+  collectionAddress: Bytes! # address
+  transferAssetOwnership: Bytes! # address
+  tokenId: BigInt! # uint256
+  amountToUser: BigInt! # uint256
+  amountToSeller: BigInt! # uint256
+  decisionRemarksByPlatform: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleAdminChanged @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  previousAdminRole: Bytes! # bytes32
+  newAdminRole: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleGranted @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleRevoked @entity(immutable: true) {
+  id: Bytes!
+  role: Bytes! # bytes32
+  account: Bytes! # address
+  sender: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type WithdrawFunds @entity(immutable: true) {
+  id: Bytes!
+  tokenAddresses: [Bytes!]! # address[]
+  tokenAmounts: [BigInt!]! # uint256[]
+  recipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
